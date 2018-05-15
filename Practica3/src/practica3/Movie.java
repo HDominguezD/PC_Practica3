@@ -7,6 +7,7 @@ package practica3;
 
 import java.util.Date;
 import java.util.Map;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
@@ -15,19 +16,19 @@ import org.json.simple.JSONObject;
  */
 public class Movie {
     private int budget;
-    private JSONObject genres;
-    private JSONObject keywords;  
+    private JSONArray genres;
+    private JSONArray keywords;  
     private String originalLang;
     private String originalTitle;
     private float popularity;
-    private JSONObject productionCompany;
+    private JSONArray productionCompany;
     private String[] originalDate;
     private long revenue;
     private String status;
     private float voteAverage;
     private int voteCount;
 
-    public Movie(int budget, JSONObject genres, JSONObject keywords, String originalLang, String originalTitle, float popularity, JSONObject productionCompany, String[] originalDate, long revenue, String status, float voteAverage, int voteCount) {
+    public Movie(int budget, JSONArray genres, JSONArray keywords, String originalLang, String originalTitle, float popularity, JSONArray productionCompany, String[] originalDate, long revenue, String status, float voteAverage, int voteCount) {
         this.budget = budget;
         this.genres = genres;
         this.keywords = keywords;
@@ -54,19 +55,19 @@ public class Movie {
         this.budget = budget;
     }
 
-    public JSONObject getGenres() {
+    public JSONArray getGenres() {
         return genres;
     }
 
-    public void setGenres(JSONObject genres) {
+    public void setGenres(JSONArray genres) {
         this.genres = genres;
     }
 
-    public JSONObject getKeywords() {
+    public JSONArray getKeywords() {
         return keywords;
     }
 
-    public void setKeywords(JSONObject keywords) {
+    public void setKeywords(JSONArray keywords) {
         this.keywords = keywords;
     }
 
@@ -94,11 +95,11 @@ public class Movie {
         this.popularity = popularity;
     }
 
-    public JSONObject getProductionCompany() {
+    public JSONArray getProductionCompany() {
         return productionCompany;
     }
 
-    public void setProductionCompany(JSONObject productionCompany) {
+    public void setProductionCompany(JSONArray productionCompany) {
         this.productionCompany = productionCompany;
     }
 

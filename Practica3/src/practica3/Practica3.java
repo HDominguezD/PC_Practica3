@@ -58,23 +58,12 @@ public class Practica3 {
                             
                             int budget = Integer.parseInt(tokens[0]);
                             JSONParser parser = new JSONParser();
-                            FileReader reader = new FileReader("json.txt");
-                            BufferedReader bufferreader = new BufferedReader(reader);
-                            
-                            String string = bufferreader.readLine() + bufferreader.readLine() +  bufferreader.readLine() + bufferreader.readLine() + bufferreader.readLine();
-                            String string2 = bufferreader.readLine();
-                            string = string2.replace("\"\"", "\"");
-                            string2 = tokens[1].replace("\"\"", "\"");
-                            String string3 = string2.substring(1,string2.length() -1);
-                            Object object1 = parser.parse(string3);
-                            JSONArray array = (JSONArray) object1;
-                            System.out.println(tokens[1]);
-                            JSONObject genres = (JSONObject)  JSONValue.parse(tokens[1]);
-                            JSONObject keywords = (JSONObject) JSONValue.parse(tokens[2]);
+                            JSONArray genres = (JSONArray)  parser.parse(toJSONStringFormat(tokens[1]));
+                            JSONArray keywords = (JSONArray)  parser.parse(toJSONStringFormat(tokens[2]));
                             String originalLang = tokens[3];
                             String originalTitle = tokens[4];
                             float popularity = Float.parseFloat(tokens[5]);
-                            JSONObject productionCompanies = (JSONObject) JSONValue.parse(tokens[6]);
+                            JSONArray productionCompanies = (JSONArray)  parser.parse(toJSONStringFormat(tokens[6]));
                             
                             String[] date = tokens[7].split("/");
                             long revenue = Long.parseLong(tokens[8]);
@@ -104,12 +93,30 @@ public class Practica3 {
         movies.parallelStream().forEach(System.out::println);
     }
     
-    public void genresSet(){
-        
+    public void genresSet(JSONArray genres){
+        for(int i = 0; i < genres.size(); i++){
+            JSONObject genre=(JSONObject) genres.get(i);
+            movies.parallelStream()
+                .filter(m -> m.getGenres().contains(genre))
+                .forEach(m -> System.out.println(getTitlesAndGenres(m)));        
+        }
     }
     
-    public void keywordMaxRevenue(){
-        
+    private static String getTitlesAndGenres (Movie movie){
+        String string = "Title: " + movie.getOriginalTitle()+ ", Genres: ";
+        for(Object genre : movie.getGenres()){
+            genre = (JSONObject) genre;
+            string = genre.toString();
+        }
+        return string;
+    }
+    
+    public void keywordMaxRevenue(JSONObject keyword){
+        movies.parallelStream()
+                .filter(m -> m.getKeywords().contains(keyword))
+                .map(m -> m.getRevenue())
+                .reduce(Math::max)
+                .ifPresent(System.out::println);
     }
     
     public List<Movie> languageAndPopularity(String lang, float popularity){
@@ -133,8 +140,17 @@ public class Practica3 {
                 .get();
     }
     
-    public Map<String, String> companiesMap (){
-        return null;   
+    public Map<String, Set<String>> companiesMap (){
+        Map<String, Set<String>> result = null; /* =
+        movies.parallelStream()
+                .collect(Collectors.groupingBy(Movie::getProductionCompany,
+                        Collectors.mapping(Movie::getOriginalTitle, Collectors.toSet())));*/
+        return result;
     }
     
+    private static String toJSONStringFormat(String s){
+        String string = s.replace("\"\"", "\"");
+        string = string.substring(1, string.length() -1);
+        return string;
+    }
 }
