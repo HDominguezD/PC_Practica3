@@ -11,8 +11,10 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.json.simple.parser.JSONParser;
 /**
  *
  * @author h.dominguezd
@@ -53,7 +55,20 @@ public class Practica3 {
                     .filter(tokens -> tokens.length == 12)
                     .map(tokens ->  {
                         try {
+                            
                             int budget = Integer.parseInt(tokens[0]);
+                            JSONParser parser = new JSONParser();
+                            FileReader reader = new FileReader("json.txt");
+                            BufferedReader bufferreader = new BufferedReader(reader);
+                            
+                            String string = bufferreader.readLine() + bufferreader.readLine() +  bufferreader.readLine() + bufferreader.readLine() + bufferreader.readLine();
+                            String string2 = bufferreader.readLine();
+                            string = string2.replace("\"\"", "\"");
+                            string2 = tokens[1].replace("\"\"", "\"");
+                            String string3 = string2.substring(1,string2.length() -1);
+                            Object object1 = parser.parse(string3);
+                            JSONArray array = (JSONArray) object1;
+                            System.out.println(tokens[1]);
                             JSONObject genres = (JSONObject)  JSONValue.parse(tokens[1]);
                             JSONObject keywords = (JSONObject) JSONValue.parse(tokens[2]);
                             String originalLang = tokens[3];

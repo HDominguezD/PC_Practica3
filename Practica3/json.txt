@@ -1,0 +1,7 @@
+{
+	"age":100,
+	"name":"mkyong.com",
+	"messages":["msg 1","msg 2","msg 3"]
+}
+[{""id"": 28, ""name"": ""Action""}, {""id"": 12, ""name"": ""Adventure""}, {""id"": 14, ""name"": ""Fantasy""}, {""id"": 878, ""name"": ""Science Fiction""}]
+[{"id": 28, "name": "Action"}, {"id": 12, "name": "Adventure"}, {"id": 14, "name": "Fantasy"}, {"id": 878, "name": "Science Fiction"}]
