@@ -13,7 +13,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 /**
  *
@@ -32,17 +31,35 @@ public class Practica3 {
     public static void main(String[] args) {
         // TODO code application logic here
         Practica3 practica = new Practica3("./movies_db.csv");
-        practica.printAllMovies();
+        /*practica.printAllMovies();
         System.out.println("---------------------------------");
         practica.budgetBetween(0, 100000000);
         System.out.println("---------------------------------");
         practica.languageAndPopularity("en", 150).forEach((m) -> {
             System.out.println(m.getOriginalTitle());
-        });
+        });*/
         System.out.println("---------------------------------");
-        System.out.println(practica.totalYearRevenue(2012));
+        JSONArray genres = new JSONArray();
+        JSONObject genre1 = new JSONObject();		
+		genre1.put("id", "12");
+		genre1.put("name", "Adventure");
+          
+        JSONObject genre2 = new JSONObject();		
+		genre2.put("id", "28");
+		genre2.put("name", "Action");
+                
+        genres.add(genre1);
+        genres.add(genre2);
+        practica.genresSet(genres);
         System.out.println("---------------------------------");
-        System.out.println(practica.totalVotesBetweenAverages(5, 8));
+        JSONObject keyword1 = new JSONObject();		
+		genre1.put("id", "1463");
+		genre1.put("name", "culture clash");
+        System.out.println(practica.keywordMaxRevenue(keyword1));
+        //System.out.println("---------------------------------");
+        //System.out.println(practica.totalYearRevenue(2012));
+        //System.out.println("---------------------------------");
+        //System.out.println(practica.totalVotesBetweenAverages(5, 8));
         
     }
 
@@ -97,8 +114,16 @@ public class Practica3 {
         for(int i = 0; i < genres.size(); i++){
             JSONObject genre=(JSONObject) genres.get(i);
             movies.parallelStream()
-                .filter(m -> m.getGenres().contains(genre))
-                .forEach(m -> System.out.println(getTitlesAndGenres(m)));        
+                    .filter(m -> {
+                        for(Object g : m.getGenres()){
+                            JSONObject gen =(JSONObject) g;
+                            if((gen.get("name").equals(genre.get("name")))){
+                                return true;
+                            }
+                        }
+                        return false;    
+                    })
+                    .forEach(m -> System.out.println(getTitlesAndGenres(m)));        
         }
     }
     
@@ -106,17 +131,26 @@ public class Practica3 {
         String string = "Title: " + movie.getOriginalTitle()+ ", Genres: ";
         for(Object genre : movie.getGenres()){
             genre = (JSONObject) genre;
-            string = genre.toString();
+            string = string + genre.toString();
         }
         return string;
     }
     
-    public void keywordMaxRevenue(JSONObject keyword){
-        movies.parallelStream()
-                .filter(m -> m.getKeywords().contains(keyword))
+    public long keywordMaxRevenue(JSONObject keyword){
+        return movies.parallelStream()
+                .filter(m -> {
+                            JSONArray keys = m.getKeywords();
+                            for(Object key : keys){
+                                JSONObject k = (JSONObject) key;
+                                if(k.get("name").equals(keyword.get("name")) /*&& k.get("id").equals(keyword.get("id"))*/){
+                                    return true;
+                                }
+                            }
+                            return false;
+                        })
                 .map(m -> m.getRevenue())
                 .reduce(Math::max)
-                .ifPresent(System.out::println);
+                .get();
     }
     
     public List<Movie> languageAndPopularity(String lang, float popularity){
